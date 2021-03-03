@@ -1,7 +1,7 @@
 import Services from "../services";
 import { navigate } from "@reach/router";
 import { useContext, useEffect } from "react";
-import { LogedInActionType, LogedInUser } from "../providers/loged-in-user";
+import { LoggedInActionType, LoggedInUser } from "../providers/logged-in-user";
 import type { User } from "../entities/user";
 
 export type Credentials = {
@@ -11,14 +11,14 @@ export type Credentials = {
 
 export default function useLogin(credentials: Credentials | null): User | null {
   const { loginService } = useContext(Services);
-  const { dispatch, state = { user: null } } = useContext(LogedInUser);
+  const { dispatch, state = { user: null } } = useContext(LoggedInUser);
 
   useEffect(() => {
     if (!credentials || !dispatch) {
       return;
     }
     loginService.login(credentials.email, credentials.password)
-      .then((user: User) => dispatch!({ type: LogedInActionType.LOG_IN, payload: user }))
+      .then((user: User) => dispatch!({ type: LoggedInActionType.LOG_IN, payload: user }))
       .then(() => navigate("/"))
       .catch(e => alert(e.message));
   }, [credentials, dispatch]);

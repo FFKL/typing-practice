@@ -10,11 +10,11 @@ import type { OperationToRole } from "../entities/operations-to-role";
 import type { UserForOperation } from "../utils/user-for-operation";
 
 export default class OperationService {
-  private readonly operationToRole: OperationToRole = {
+  private readonly operationToRole: Readonly<OperationToRole> = {
     [Operation.UPDATE_TO_ADMIN]: Role.ADMIN,
     [Operation.UPDATE_TO_CLIENT]: Role.CLIENT,
     [Operation.UPDATE_TO_MODERATOR]: Role.MODERATOR,
-  } as const;
+  };
 
   constructor(private readonly userService: UserService) {}
 
