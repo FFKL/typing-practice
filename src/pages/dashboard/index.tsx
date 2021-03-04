@@ -13,6 +13,10 @@ export default function Dashboard(_: RouteComponentProps) {
   const currentUser = useCurrentUser();
   const [users, onUserUpdates] = useUsers();
 
+  if (currentUser === null) {
+    return null
+  }
+
   const columns = [
     {
       title: "Name",
@@ -32,7 +36,7 @@ export default function Dashboard(_: RouteComponentProps) {
       render: (_: undefined, user: User) => (
         <Actions
           user={user}
-          currentUser={currentUser!}
+          currentUser={currentUser}
           onAction={(action) => onUserUpdates(user, action)}
         />
       ),

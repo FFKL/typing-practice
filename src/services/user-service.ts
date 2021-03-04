@@ -1,8 +1,9 @@
-import { Role } from "../entities/role";
-import { Admin } from "../entities/admin";
-import { Client } from "../entities/client";
-import { Moderator } from "../entities/moderator";
-import { Operation } from "../entities/operation";
+import { Admin } from '../entities/admin';
+import { Client } from '../entities/client';
+import { Moderator } from '../entities/moderator';
+import { Operation } from '../entities/operation';
+import { Role } from '../entities/role';
+
 import type { User } from "../entities/user";
 import type { RoleToUser } from "../entities/role-to-user";
 
@@ -36,6 +37,17 @@ export default class UserService {
 
   getAvailableOperations(user: User, currentUser: User): Operation[] {
     // TODO: Вам нужно поменять логику внутри getAvailableOperations для того, что бы это работало с логином
+
+    if (currentUser instanceof Moderator) {
+      if (user instanceof Moderator) {
+        return [Operation.UPDATE_TO_CLIENT];
+      } else if (user instanceof Admin) {
+        return [];
+      }
+
+      return [Operation.UPDATE_TO_MODERATOR];
+    }
+
     if (user instanceof Admin || user instanceof Client) {
       return [Operation.UPDATE_TO_MODERATOR];
     }
