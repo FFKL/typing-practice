@@ -2,6 +2,7 @@ import { Admin } from '../entities/admin';
 import { Client } from '../entities/client';
 import { Moderator } from '../entities/moderator';
 import { Operation } from '../entities/operation';
+import { PrivilegedUser } from '../entities/privileged-user';
 import { Role } from '../entities/role';
 
 import type { User } from "../entities/user";
@@ -35,26 +36,15 @@ export default class UserService {
     return this.users;
   }
 
-  getAvailableOperations(user: User, currentUser: User): Operation[] {
-    // TODO: Вам нужно поменять логику внутри getAvailableOperations для того, что бы это работало с логином
-
-    if (currentUser instanceof Moderator) {
-      if (user instanceof Moderator) {
-        return [Operation.UPDATE_TO_CLIENT];
-      } else if (user instanceof Admin) {
-        return [];
-      }
-
-      return [Operation.UPDATE_TO_MODERATOR];
+  getAvailableOperations(user: User, currentUser: PrivilegedUser): Operation[] {
+    switch (currentUser.role) {
+      case Role.ADMIN:
+        return this.getAvailableOperationsForAdmin(user);
+      case Role.MODERATOR:
+        return this.getAvailableOperationsForModerator(user);
     }
-
-    if (user instanceof Admin || user instanceof Client) {
-      return [Operation.UPDATE_TO_MODERATOR];
-    }
-
-    return [Operation.UPDATE_TO_CLIENT, Operation.UPDATE_TO_ADMIN];
   }
-
+  
   getConstructorByRole(role: Role) {
     switch (role) {
       case Role.ADMIN:
@@ -63,6 +53,28 @@ export default class UserService {
         return Client;
       case Role.MODERATOR:
         return Moderator;
+    }
+  }
+
+  private getAvailableOperationsForModerator(user: User): Operation[] {
+    switch (user.role) {
+      case Role.ADMIN:
+        return [];
+      case Role.MODERATOR:
+        return [Operation.UPDATE_TO_CLIENT];
+      case Role.CLIENT:
+        return [Operation.UPDATE_TO_MODERATOR];
+    }
+  }
+
+  private getAvailableOperationsForAdmin<U extends User>(user: U): Operation[] {
+    switch (user.role) {
+      case Role.ADMIN:
+        return [Operation.UPDATE_TO_MODERATOR];
+      case Role.MODERATOR:
+        return [Operation.UPDATE_TO_CLIENT, Operation.UPDATE_TO_ADMIN];
+      case Role.CLIENT:
+        return [Operation.UPDATE_TO_MODERATOR];
     }
   }
 }

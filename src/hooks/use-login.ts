@@ -18,10 +18,10 @@ export default function useLogin(credentials: Credentials | null): User | null {
       return;
     }
     loginService.login(credentials.email, credentials.password)
-      .then((user: User) => dispatch!({ type: LoggedInActionType.LOG_IN, payload: user }))
+      .then(user => dispatch!({ type: LoggedInActionType.LOG_IN, payload: user }))
       .then(() => navigate("/"))
       .catch(e => alert(e.message));
-  }, [credentials, dispatch]);
+  }, [credentials, dispatch, loginService]);
 
   return state.user;
 }

@@ -1,6 +1,6 @@
-import { Role } from "./role";
-import { Operation } from "../entities/operation";
-import { AccountInfo } from "./account-info";
+import { AccountInfo } from './account-info';
+import { Role } from './role';
+
 import type { User } from "./user";
 
 export class Client extends AccountInfo {
