@@ -1,7 +1,7 @@
 export class Email {
-  static EMAIL_PATTERN = /^\w+@example\.com$/;
+  private static EMAIL_PATTERN = /^[a-zA-Z1-9._]+@example\.com$/;
 
-  static of(candidate: string): Email {
+  static from(candidate: string): Email {
     const isValidEmail = this.EMAIL_PATTERN.test(candidate);
     if (isValidEmail) {
       return new Email(candidate);

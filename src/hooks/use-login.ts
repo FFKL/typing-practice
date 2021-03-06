@@ -21,7 +21,7 @@ export default function useLogin(credentials: Credentials | null): User | null {
     }
     
     Promise.resolve(credentials)
-      .then(({ email, password }) => ({ email: Email.of(email), password: Password.of(password) }))
+      .then(({ email, password }) => ({ email: Email.from(email), password: Password.from(password) }))
       .then(({ email, password }) => loginService.login(email, password))
       .then(user => dispatch!({ type: LoggedInActionType.LOG_IN, payload: user }))
       .then(() => navigate("/"))

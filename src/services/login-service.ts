@@ -4,6 +4,7 @@ import { Moderator } from '../entities/moderator';
 import { Password } from '../entities/password';
 import { PrivilegedUser } from '../entities/privileged-user';
 import { User } from '../entities/user';
+import or from '../utils/or';
 import UserService from './user-service';
 
 export default class LoginService {
@@ -16,21 +17,15 @@ export default class LoginService {
     const loggedInUser = users.find(authenticateUser);
 
     this.assertUserExistence(loggedInUser);
-    this.assertPrivilegedUser(loggedInUser);
+    
+    const PrivilegedUser = or(Admin, Moderator);
 
-    return loggedInUser;
+    return PrivilegedUser(loggedInUser);
   }
 
   private assertUserExistence(maybeUser: User | undefined): asserts maybeUser is User {
     if (!maybeUser) {
       throw new Error('Invalid email or password');
     }
-  }
-
-  private assertPrivilegedUser(user: User): asserts user is PrivilegedUser {
-    if (user instanceof Admin || user instanceof Moderator) {
-      return;
-    }
-    throw new Error('Access denied!');
   }
 }

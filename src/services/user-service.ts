@@ -10,6 +10,16 @@ import type { RoleToUser } from "../entities/role-to-user";
 
 export default class UserService {
   private users: readonly User[] = [];
+  private readonly roleToModeratorOperations = {
+    [Role.ADMIN]: [],
+    [Role.MODERATOR]: [Operation.UPDATE_TO_CLIENT],
+    [Role.CLIENT]: [Operation.UPDATE_TO_MODERATOR]
+  } as const;
+  private readonly roleToAdminOperations = {
+    [Role.ADMIN]: [Operation.UPDATE_TO_MODERATOR],
+    [Role.MODERATOR]: [Operation.UPDATE_TO_CLIENT, Operation.UPDATE_TO_ADMIN],
+    [Role.CLIENT]: [Operation.UPDATE_TO_MODERATOR]
+  } as const;
 
   async getAllUsers(): Promise<readonly User[]> {
     if (this.users.length !== 0) {
@@ -36,15 +46,17 @@ export default class UserService {
     return this.users;
   }
 
-  getAvailableOperations(user: User, currentUser: PrivilegedUser): Operation[] {
-    switch (currentUser.role) {
-      case Role.ADMIN:
-        return this.getAvailableOperationsForAdmin(user);
-      case Role.MODERATOR:
-        return this.getAvailableOperationsForModerator(user);
+  getAvailableOperations<R extends Role>(role: R, currentUser: PrivilegedUser): readonly Operation[] {
+    if (this.isAdmin(currentUser)) {
+      return this.roleToAdminOperations[role];
     }
+    return this.roleToModeratorOperations[role];
   }
-  
+
+  private isAdmin(user: PrivilegedUser): user is Admin {
+    return user instanceof Admin;
+  }
+
   getConstructorByRole(role: Role) {
     switch (role) {
       case Role.ADMIN:
@@ -53,28 +65,6 @@ export default class UserService {
         return Client;
       case Role.MODERATOR:
         return Moderator;
-    }
-  }
-
-  private getAvailableOperationsForModerator(user: User): Operation[] {
-    switch (user.role) {
-      case Role.ADMIN:
-        return [];
-      case Role.MODERATOR:
-        return [Operation.UPDATE_TO_CLIENT];
-      case Role.CLIENT:
-        return [Operation.UPDATE_TO_MODERATOR];
-    }
-  }
-
-  private getAvailableOperationsForAdmin<U extends User>(user: U): Operation[] {
-    switch (user.role) {
-      case Role.ADMIN:
-        return [Operation.UPDATE_TO_MODERATOR];
-      case Role.MODERATOR:
-        return [Operation.UPDATE_TO_CLIENT, Operation.UPDATE_TO_ADMIN];
-      case Role.CLIENT:
-        return [Operation.UPDATE_TO_MODERATOR];
     }
   }
 }

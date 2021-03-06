@@ -1,7 +1,7 @@
 export class Password {
-  static PASSWORD_PATTERN = /^\w{4,}$/g;
+  private static PASSWORD_PATTERN = /^\w{4,}$/g;
 
-  static of(candidate: string): Password {
+  static from(candidate: string): Password {
     const isValidPassword = this.PASSWORD_PATTERN.test(candidate);
     if (isValidPassword) {
       return new Password(candidate);
