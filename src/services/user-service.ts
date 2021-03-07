@@ -2,24 +2,15 @@ import { Admin } from '../entities/admin';
 import { Client } from '../entities/client';
 import { Moderator } from '../entities/moderator';
 import { Operation } from '../entities/operation';
-import type { PrivilegedUser } from '../entities/privileged-user';
 import { Role } from '../entities/role';
+import { AVAILABLE_OPERATIONS } from '../settings/available-operations';
 
+import type { PrivilegedUser } from '../entities/privileged-user';
 import type { User } from "../entities/user";
 import type { RoleToUser } from "../entities/role-to-user";
 
 export default class UserService {
   private users: readonly User[] = [];
-  private readonly roleToModeratorOperations = {
-    [Role.ADMIN]: [],
-    [Role.MODERATOR]: [Operation.UPDATE_TO_CLIENT],
-    [Role.CLIENT]: [Operation.UPDATE_TO_MODERATOR]
-  } as const;
-  private readonly roleToAdminOperations = {
-    [Role.ADMIN]: [Operation.UPDATE_TO_MODERATOR],
-    [Role.MODERATOR]: [Operation.UPDATE_TO_CLIENT, Operation.UPDATE_TO_ADMIN],
-    [Role.CLIENT]: [Operation.UPDATE_TO_MODERATOR]
-  } as const;
 
   async getAllUsers(): Promise<readonly User[]> {
     if (this.users.length !== 0) {
@@ -46,15 +37,8 @@ export default class UserService {
     return this.users;
   }
 
-  getAvailableOperations<R extends Role>(role: R, currentUser: PrivilegedUser): readonly Operation[] {
-    if (this.isAdmin(currentUser)) {
-      return this.roleToAdminOperations[role];
-    }
-    return this.roleToModeratorOperations[role];
-  }
-
-  private isAdmin(user: PrivilegedUser): user is Admin {
-    return user instanceof Admin;
+  getAvailableOperations<R1 extends Role, R2 extends Role>(user: User & { role: R1 }, currentUser: PrivilegedUser & { role: R2 }): readonly Operation[] {
+    return AVAILABLE_OPERATIONS[currentUser.role][user.role];
   }
 
   getConstructorByRole(role: Role) {

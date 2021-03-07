@@ -7,5 +7,5 @@ import type { User } from "../entities/user";
 
 export default function useOperations(user: User, currentUser: PrivilegedUser) {
   const { userService } = useContext(Services);
-  return userService.getAvailableOperations(user.role, currentUser);
+  return userService.getAvailableOperations(user, currentUser);
 }
