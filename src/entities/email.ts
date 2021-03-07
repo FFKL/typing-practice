@@ -6,7 +6,7 @@ export class Email {
     if (isValidEmail) {
       return new Email(candidate);
     }
-    throw new TypeError('String is not Email');
+    throw new TypeError('String is not a valid email');
   }
 
   private readonly _type = Symbol('Email');

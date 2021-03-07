@@ -6,7 +6,7 @@ export class Password {
     if (isValidPassword) {
       return new Password(candidate);
     }
-    throw new TypeError('String is not Password');
+    throw new TypeError('String is not a valid password');
   }
 
   private readonly _type = Symbol('Password');
