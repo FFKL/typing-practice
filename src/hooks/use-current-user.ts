@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { navigate } from '@reach/router';
 
-import { PrivilegedUser } from '../entities/privileged-user';
+import type { PrivilegedUser } from '../entities/privileged-user';
 import { LoggedInUser } from '../providers/logged-in-user';
 
 export default function useCurrentUser(): PrivilegedUser | null {

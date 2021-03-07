@@ -2,7 +2,7 @@ import { Admin } from '../entities/admin';
 import { Client } from '../entities/client';
 import { Moderator } from '../entities/moderator';
 import { Operation } from '../entities/operation';
-import { PrivilegedUser } from '../entities/privileged-user';
+import type { PrivilegedUser } from '../entities/privileged-user';
 import { Role } from '../entities/role';
 
 import type { User } from "../entities/user";

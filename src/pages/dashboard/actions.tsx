@@ -3,7 +3,7 @@ import { Operation } from '../../entities/operation';
 import { Dropdown, Menu } from 'antd';
 import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import type { User } from '../../entities/user';
-import { PrivilegedUser } from '../../entities/privileged-user';
+import type { PrivilegedUser } from '../../entities/privileged-user';
 
 type ActionsProps = {
   user: User;

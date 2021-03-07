@@ -1,10 +1,7 @@
-import { Admin } from '../entities/admin';
-import { Email } from '../entities/email';
-import { Moderator } from '../entities/moderator';
-import { Password } from '../entities/password';
+import type { Email } from '../entities/email';
+import type { Password } from '../entities/password';
 import { PrivilegedUser } from '../entities/privileged-user';
 import { User } from '../entities/user';
-import or from '../utils/or';
 import UserService from './user-service';
 
 export default class LoginService {
@@ -17,8 +14,6 @@ export default class LoginService {
     const loggedInUser = users.find(authenticateUser);
 
     this.assertUserExistence(loggedInUser);
-    
-    const PrivilegedUser = or(Admin, Moderator);
 
     return PrivilegedUser(loggedInUser);
   }

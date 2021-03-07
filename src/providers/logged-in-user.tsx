@@ -1,6 +1,6 @@
 import { createContext, useReducer } from 'react';
 
-import { PrivilegedUser } from '../entities/privileged-user';
+import type { PrivilegedUser } from '../entities/privileged-user';
 
 import type { ReactChild } from "react";
 export enum LoggedInActionType {
