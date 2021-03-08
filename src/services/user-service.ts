@@ -1,7 +1,6 @@
 import { Admin } from '../entities/admin';
 import { Client } from '../entities/client';
 import { Moderator } from '../entities/moderator';
-import { Operation } from '../entities/operation';
 import { Role } from '../entities/role';
 import { AVAILABLE_OPERATIONS } from '../settings/available-operations';
 
@@ -37,8 +36,13 @@ export default class UserService {
     return this.users;
   }
 
-  getAvailableOperations<R1 extends Role, R2 extends Role>(user: User & { role: R1 }, currentUser: PrivilegedUser & { role: R2 }): readonly Operation[] {
-    return AVAILABLE_OPERATIONS[currentUser.role][user.role];
+  getAvailableOperations<
+    R1 extends Role,
+    U1 extends User & { role: R1 },
+    R2 extends Role,
+    U2 extends PrivilegedUser & { role: R2 }
+  >(user: U1, currentUser: U2) {
+    return AVAILABLE_OPERATIONS[currentUser.role][user.role] as AVAILABLE_OPERATIONS[U2["role"]][U1["role"]];
   }
 
   getConstructorByRole(role: Role) {

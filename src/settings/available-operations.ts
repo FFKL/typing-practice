@@ -18,3 +18,6 @@ export const AVAILABLE_OPERATIONS = {
       [Role.CLIENT]: [Operation.UPDATE_TO_MODERATOR]
   }
 } as const;
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type AVAILABLE_OPERATIONS = typeof AVAILABLE_OPERATIONS;

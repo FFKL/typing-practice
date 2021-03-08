@@ -12,7 +12,7 @@ type ActionsProps = {
 };
 
 export default function Actions({ user, currentUser, onAction }: ActionsProps) {
-  const operations = useOperations(user, currentUser);
+  const operations: readonly Operation[] = useOperations(user, currentUser);
   if (operations.length === 0) {
     return null;
   }
