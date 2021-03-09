@@ -7,6 +7,8 @@ import { AVAILABLE_OPERATIONS } from '../settings/available-operations';
 import type { PrivilegedUser } from '../entities/privileged-user';
 import type { User } from "../entities/user";
 import type { RoleToUser } from "../entities/role-to-user";
+import type { Email } from '../entities/email';
+import type { Password } from '../entities/password';
 
 export default class UserService {
   private users: readonly User[] = [];
@@ -34,6 +36,12 @@ export default class UserService {
     const User = this.getConstructorByRole(newRole);
     this.users = this.users.map((u) => (u.id === user.id ? User.from(u) : u));
     return this.users;
+  }
+
+  async findUser(email: Email, password: Password): Promise<User | undefined> {
+    const users = await this.getAllUsers();
+    const isTargetUser = (user: User): boolean => user.email === email.value && user.password === password.value;
+    return  users.find(isTargetUser);
   }
 
   getAvailableOperations<
