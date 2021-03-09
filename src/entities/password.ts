@@ -1,8 +1,8 @@
 export class Password {
-  private static PASSWORD_PATTERN = /^\w{4,}$/g;
+  private static PASSWORD_PATTERN = /^\w{4,}$/;
 
   static from(candidate: string): Password {
-    const isValidPassword = this.PASSWORD_PATTERN.test(candidate);
+    const isValidPassword = new RegExp(this.PASSWORD_PATTERN).test(candidate);
     if (isValidPassword) {
       return new Password(candidate);
     }
