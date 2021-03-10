@@ -4,7 +4,6 @@ import { Moderator } from '../entities/moderator';
 import { Role } from '../entities/role';
 import { AVAILABLE_OPERATIONS } from '../settings/available-operations';
 
-import type { PrivilegedUser } from '../entities/privileged-user';
 import type { User } from "../entities/user";
 import type { RoleToUser } from "../entities/role-to-user";
 import type { Email } from '../entities/email';
@@ -48,7 +47,7 @@ export default class UserService {
     R1 extends Role,
     U1 extends User & { role: R1 },
     R2 extends Role,
-    U2 extends PrivilegedUser & { role: R2 }
+    U2 extends User & { role: R2 }
   >(user: U1, currentUser: U2) {
     return AVAILABLE_OPERATIONS[currentUser.role][user.role] as AVAILABLE_OPERATIONS[U2["role"]][U1["role"]];
   }
