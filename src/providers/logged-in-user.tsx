@@ -1,15 +1,15 @@
 import { createContext, useReducer } from 'react';
 
-import type { PrivilegedUser } from '../entities/privileged-user';
-
 import type { ReactChild } from "react";
+import type { User } from '../entities/user';
+
 export enum LoggedInActionType {
   LOG_IN = "log in",
 }
 
 type LoggedInAction = {
   type: LoggedInActionType.LOG_IN;
-  payload: PrivilegedUser;
+  payload: User;
 };
 
 type LoggedInProviderProps = {
@@ -17,7 +17,7 @@ type LoggedInProviderProps = {
 };
 
 type LoggedInUserState = {
-  user: PrivilegedUser | null;
+  user: User | null;
 };
 
 type LoggedInProviderContext = {

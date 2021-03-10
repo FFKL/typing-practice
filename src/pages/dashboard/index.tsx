@@ -1,21 +1,41 @@
-import "./styles.css";
-import Page from "../base";
-import Name from "./name";
-import Role from "./role";
-import Actions from "./actions";
-import useUsers from "../../hooks/use-users";
-import useCurrentUser from "../../hooks/use-current-user";
-import { Table, Breadcrumb } from "antd";
-import type { User } from "../../entities/user";
-import type { RouteComponentProps } from "@reach/router";
+import './styles.css';
 
-export default function Dashboard(_: RouteComponentProps) {
+import { Breadcrumb, Table } from 'antd';
+
+import { RouteComponentProps } from '@reach/router';
+
+import AccessDenied from '../../components/access-denied';
+import { PrivilegedUser } from '../../entities/privileged-user';
+import useCurrentUser from '../../hooks/use-current-user';
+import useUsers from '../../hooks/use-users';
+import Page from '../base';
+import Actions from './actions';
+import Name from './name';
+import Role from './role';
+
+import type { User } from "../../entities/user";
+
+function ensurePrivilegedUser(user: User | null): PrivilegedUser | null {
+  if (user === null) {
+    return null
+  }
+
+  try {
+    return PrivilegedUser(user);
+  } catch (err) {
+    return null;
+  }
+}
+
+export default function Dashboard({navigate}: RouteComponentProps) {
   const currentUser = useCurrentUser();
   const [users, onUserUpdates] = useUsers();
 
-  if (currentUser === null) {
-    return null
+  const privilegedUser = ensurePrivilegedUser(currentUser);
+  if (privilegedUser === null) {
+    return <AccessDenied />
   }
+
 
   const columns = [
     {
@@ -36,7 +56,7 @@ export default function Dashboard(_: RouteComponentProps) {
       render: (_: undefined, user: User) => (
         <Actions
           user={user}
-          currentUser={currentUser}
+          currentUser={privilegedUser}
           onAction={(action) => onUserUpdates(user, action)}
         />
       ),
