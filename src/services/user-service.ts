@@ -1,10 +1,11 @@
-import { Role } from "../entities/role";
-import { User } from "../entities/user";
-import { Admin } from "../entities/admin";
-import { castTo } from "../entities/role-to-user";
-import { Client } from "../entities/client";
-import { Operation } from "../entities/operation";
+import { Role } from '../entities/role';
+import { castTo } from '../entities/role-to-user';
+import { User } from '../entities/user';
+import { AVAILABLE_OPERATIONS } from '../settings/available-operations';
+
 import type { RoleToUser } from "../entities/role-to-user";
+import type { Email } from '../entities/email';
+import type { Password } from '../entities/password';
 
 export default class UserService {
   private users: readonly User[] = [];
@@ -22,6 +23,12 @@ export default class UserService {
     return import("../mocks/users.json");
   }
 
+  async findUser(email: Email, password: Password): Promise<User | undefined> {
+    const users = await this.getAllUsers();
+    const isTargetUser = (user: User): boolean => user.email === email.value && user.password === password.value;
+    return users.find(isTargetUser);
+  }
+
   async updateUserRole<R extends Role>(
     user: RoleToUser[R],
     newRole: R
@@ -31,11 +38,12 @@ export default class UserService {
     return this.users;
   }
 
-  getAvailableOperations(user: User) {
-    if (Admin.guard(user) || Client.guard(user)) {
-      return [Operation.UPDATE_TO_MODERATOR];
-    }
-
-    return [Operation.UPDATE_TO_CLIENT, Operation.UPDATE_TO_ADMIN];
+  getAvailableOperations<
+    R1 extends Role,
+    U1 extends User & { role: R1 },
+    R2 extends Role,
+    U2 extends User & { role: R2 }
+  >(user: U1, currentUser: U2) {
+    return AVAILABLE_OPERATIONS[currentUser.role][user.role] as AVAILABLE_OPERATIONS[U2["role"]][U1["role"]];
   }
 }

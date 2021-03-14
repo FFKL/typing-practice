@@ -1,8 +1,8 @@
-import { Moderator } from './moderator';
+import type { Static } from 'runtypes';
+
 import { Admin } from './admin';
-import or from '../utils/or';
+import { Moderator } from './moderator';
 
-export const PrivilegedUser = or(Admin, Moderator);
+export const PrivilegedUser = Admin.Or(Moderator);
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export type PrivilegedUser = ReturnType<typeof PrivilegedUser>;
+export type PrivilegedUser = Static<typeof PrivilegedUser>;

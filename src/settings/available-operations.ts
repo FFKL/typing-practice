@@ -19,5 +19,4 @@ export const AVAILABLE_OPERATIONS = {
   }
 } as const;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type AVAILABLE_OPERATIONS = typeof AVAILABLE_OPERATIONS;

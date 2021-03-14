@@ -21,13 +21,13 @@ function ensurePrivilegedUser(user: User | null): PrivilegedUser | null {
   }
 
   try {
-    return PrivilegedUser(user);
+    return PrivilegedUser.check(user);
   } catch (err) {
     return null;
   }
 }
 
-export default function Dashboard({navigate}: RouteComponentProps) {
+export default function Dashboard(_: RouteComponentProps) {
   const currentUser = useCurrentUser();
   const [users, onUserUpdates] = useUsers();
 
