@@ -25,7 +25,7 @@ export default class UserService {
 
   async findUser(email: Email, password: Password): Promise<User | undefined> {
     const users = await this.getAllUsers();
-    const isTargetUser = (user: User): boolean => user.email === email.value && user.password === password.value;
+    const isTargetUser = (user: User): boolean => user.email === email && user.password === password;
     return users.find(isTargetUser);
   }
 

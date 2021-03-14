@@ -1,15 +1,9 @@
-export class Password {
-  private static PASSWORD_PATTERN = /^\w{4,}$/;
+import * as t from "runtypes";
 
-  static from(candidate: string): Password {
-    const isValidPassword = new RegExp(this.PASSWORD_PATTERN).test(candidate);
-    if (isValidPassword) {
-      return new Password(candidate);
-    }
-    throw new TypeError('String is not a valid password');
-  }
+const PASSWORD_PATTERN = /^\w{4,}$/;
 
-  private readonly _type = Symbol('Password');
+export const Password = t.String
+  .withConstraint(s => new RegExp(PASSWORD_PATTERN).test(s) || `'${s}' is not a valid password`, { name: 'ValidPassword' })
+  .withBrand('Password');
 
-  protected constructor(public readonly value: string) { };
-}
+export type Password = t.Static<typeof Password>;

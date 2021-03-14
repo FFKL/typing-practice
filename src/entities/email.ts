@@ -1,15 +1,9 @@
-export class Email {
-  private static EMAIL_PATTERN = /^[a-zA-Z1-9._]+@example\.com$/;
+import * as t from "runtypes";
 
-  static from(candidate: string): Email {
-    const isValidEmail = new RegExp(this.EMAIL_PATTERN).test(candidate);
-    if (isValidEmail) {
-      return new Email(candidate);
-    }
-    throw new TypeError('String is not a valid email');
-  }
+const EMAIL_PATTERN = /^[a-zA-Z1-9._]+@example\.com$/;
 
-  private readonly _type = Symbol('Email');
+export const Email = t.String
+  .withConstraint(s => new RegExp(EMAIL_PATTERN).test(s) || `'${s}' is not a valid email`, { name: 'ValidEmail' })
+  .withBrand('Email');
 
-  protected constructor(public readonly value: string) { }
-}
+export type Email = t.Static<typeof Email>;
